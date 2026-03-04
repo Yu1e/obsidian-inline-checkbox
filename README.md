@@ -208,9 +208,38 @@ if (found) {
   editor.setCursor({line: c.line, ch: ws});
 }
 
-##### Для цифр добавьте вторую кнопку и замените в ней массив icons:
+##### Для цифр добавьте вторую кнопку:
 
 const icons = ["①","②","③","④","⑤","⑥","⑦","⑧","⑨"];
+const editor = app.workspace.activeLeaf?.view?.editor;
+if (!editor) return;
+const c = editor.getCursor();
+const line = editor.getLine(c.line);
+
+let found = null, pos = -1, foundIdx = -1;
+
+for (let p = c.ch; p >= Math.max(0, c.ch - 5); p--) {
+  for (let i = 0; i < icons.length; i++) {
+    if (line.substring(p, p + icons[i].length) === icons[i]) {
+      found = icons[i]; pos = p; foundIdx = i;
+      break;
+    }
+  }
+  if (found) break;
+}
+
+if (found) {
+  const next = icons[(foundIdx + 1) % icons.length];
+  let end = pos + found.length;
+  while (end < line.length && (line.charCodeAt(end) === 0xFE0E || line.charCodeAt(end) === 0xFE0F)) end++;
+  editor.replaceRange(next, {line: c.line, ch: pos}, {line: c.line, ch: end});
+  editor.setCursor({line: c.line, ch: pos});
+} else {
+  let ws = c.ch;
+  while (ws > 0 && !" \t,".includes(line[ws - 1])) ws--;
+  editor.replaceRange("① ", {line: c.line, ch: ws});
+  editor.setCursor({line: c.line, ch: ws});
+}
 
 Лицензия
 MIT
