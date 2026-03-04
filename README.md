@@ -1,6 +1,6 @@
 # Inline Checkbox Plugin for Obsidian
 
-A plugin that transforms Unicode symbols into styled interactive checkboxes and numbered markers directly in your text.
+A plugin that transforms Unicode symbols into styled interactive checkboxes and numbered markers directly in your text. Attention! These inline checkboxes are not tasks and are not recognized by Obsidian or task plugins; they are for visual styling only.
 
 ## Features
 
