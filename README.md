@@ -4,6 +4,8 @@ A plugin that transforms Unicode symbols into styled interactive checkboxes and 
 
 ![Demo](demo.png)
 
+![Demo](demoen.png)
+
 ## Features
 
 - **Inline checkboxes** — not in lists, but anywhere in the text
