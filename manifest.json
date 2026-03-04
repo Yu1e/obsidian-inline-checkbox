@@ -1,0 +1,9 @@
+{
+  "id": "inline-checkbox",
+  "name": "Yule Inline Checkbox",
+  "version": "1.0.0",
+  "minAppVersion": "1.0.0",
+  "description": "Renders Unicode symbols as clickable inline checkboxes and circled digits. Интерактивные инлайн-чекбоксы и цифры в кружках"
+  "author": "Yule",
+  "isDesktopOnly": true
+}

@@ -1,0 +1,134 @@
+/* =============================================
+   ПАЛИТРА — МЕНЯЙТЕ ЦВЕТА ЗДЕСЬ
+   ============================================= */
+
+:root {
+  /* Флажки */
+  --cb-empty:      #FF8C00;
+  --cb-done:       #739834;
+  --cb-progress:   #FFA500;
+  --cb-cancelled:  #808080;
+  --cb-important:  #a33333;
+  --cb-question:   #DFA000;
+
+  --cb-glow-empty: #FF8C00;
+  --cb-glow-prog:  #FFA500;
+
+  /* Цифры в кружке — НАСТРОЙКИ */
+  --cb-digit-size:  0.55em;
+  --cb-digit-color: #e040fb;
+  --cb-digit-glow:  #e040fb;
+}
+
+/* =============================================
+   ОБЩИЕ СТИЛИ
+   ============================================= */
+
+.inline-icon {
+  cursor: pointer;
+  font-size: 1.1em;
+  padding: 0 2px;
+  border-radius: 3px;
+}
+
+/* =============================================
+   ФЛАЖКИ
+   ============================================= */
+
+/* ▢ Пустой */
+.icon-empty {
+  color: var(--cb-empty);
+  text-shadow:
+    0 0 8px  var(--cb-glow-empty),
+    0 0 15px var(--cb-glow-empty);
+  animation: icon-pulse 0.6s infinite alternate;
+}
+
+@keyframes icon-pulse {
+  0%   { opacity: 1;   text-shadow: 0 0 10px var(--cb-glow-empty), 0 0 20px var(--cb-glow-empty); }
+  100% { opacity: 0.7; text-shadow: 0 0 5px  var(--cb-glow-empty), 0 0 10px var(--cb-glow-empty); }
+}
+
+/* ☑ Готово — залитый зелёный, белая галочка */
+.icon-done {
+  color: transparent !important;
+  font-size: 0 !important;
+  display: inline-block !important;
+  width: 26px !important;
+  height: 26px !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24'%3E%3Crect x='1.5' y='1.5' width='21' height='21' rx='3' fill='%23556b2f' stroke='%23556b2f' stroke-width='1.5'/%3E%3Cpath d='M7 13l3 3 7-7' fill='none' stroke='white' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+  background-size: contain !important;
+  background-repeat: no-repeat !important;
+  vertical-align: middle !important;
+  position: relative !important;
+  top: -2px !important;
+}
+
+/* ◧ В процессе */
+.icon-progress {
+  color: var(--cb-progress);
+  text-shadow: 0 0 6px var(--cb-glow-prog);
+}
+
+/* ☒ Отменено */
+.icon-cancelled {
+  color: var(--cb-cancelled);
+  opacity: 0.7;
+}
+
+/* ⚠ Важно — залитый красный квадрат, белый восклицательный знак */
+.icon-important {
+  color: var(--cb-important) !important;
+  display: inline-block !important;
+  width: 26px !important;
+  height: 26px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  transform: none !important;
+  vertical-align: middle !important;
+  position: relative !important;
+  top: -2px !important;
+  line-height: 0 !important;
+  overflow: hidden !important;
+}
+
+.icon-important svg {
+  display: block !important;
+  width: 26px !important;
+  height: 26px !important;
+}
+
+/* ⍰ Вопрос — залитый горчичный, белый знак вопроса */
+.icon-question {
+  color: var(--cb-question) !important;
+  display: inline-block !important;
+  width: 26px !important;
+  height: 26px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  transform: none !important;
+  vertical-align: middle !important;
+  position: relative !important;
+  top: -2px !important;
+  line-height: 0 !important;
+  overflow: hidden !important;
+}
+
+.icon-question svg {
+  display: block !important;
+  width: 26px !important;
+  height: 26px !important;
+}
+
+/* =============================================
+   ЦИФРЫ В КРУЖКЕ  ①–⑩
+   ============================================= */
+
+.icon-digit {
+  font-size: var(--cb-digit-size) !important;
+  color: var(--cb-digit-color) !important;
+  text-shadow: 0 0 6px var(--cb-digit-glow);
+  vertical-align: middle;
+  position: relative;
+  top: -1px;
+}
