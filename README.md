@@ -97,7 +97,7 @@ Enable in Settings → Community Plugins.
 
 ### Использование с Note Toolbar
 Коды для вставки и переключения флажков и умных цифр прилагается отдельно: 
-- [checkboxes-button-for-note-toolbar-plugin.js](checkboxes-button-for-note-toolbar-plugin.js)
+- ([checkboxes-button-for-note-toolbar-plugin](https://github.com/Yu1e/obsidian-yule-inline-checkbox/blob/7da7281e1785e958c9cc8f1dc5a82f4074a5d581/checkboxes-button-for-note-toolbar-plugin).js)
 - [digits-button-for-note-toolbar-plugin.js](digits-button-for-note-toolbar-plugin.js)
 
 ## Лицензия
