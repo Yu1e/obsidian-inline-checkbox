@@ -1,39 +1,99 @@
-# Inline Checkbox Plugin for Obsidian
-
-A plugin that transforms Unicode symbols into styled interactive checkboxes and numbered markers directly in your text. Attention! These inline checkboxes are not tasks and are not recognized by Obsidian or task plugins; they are for visual styling only.
-
 ![Demo](demo.png)
 
 ![Demo](demoen.png)
 
-Features
-Inline checkboxes — not in lists, but anywhere in the text.
-Click to toggle — cycles through states instantly.
-Two independent cycles:
-Checkboxes: ▢ → ☑ → ◧ → ☒ → ⚠ → ⍰ → ▢
-Smart Digits: ① → ② ... → ⑳ → ①
-Smart Sequence Management:
-Context-aware insertion: Automatically detects the previous number in a paragraph and inserts the next one.
-Auto-reindexing: If you insert a digit in the middle of a sequence, the plugin automatically increments all subsequent digits to maintain the correct order.
-Fully customizable — colors, sizes, and glow effects via CSS variables.
-Checkbox States
-Symbol	State	Description
-▢	Empty	Not started (Orange animated glow)
-☑	Done	Completed (Green filled square)
-◧	In Progress	Work in progress (Half-filled)
-☒	Cancelled	Cancelled/rejected (Gray)
-⚠	Important	Requires attention (Red square)
-⍰	Question	Needs clarification (Mustard square)
-Circled Digits
-① ② ③ ④ ⑤ ⑥ ⑦ ⑧ ⑨ ⑩ ⑪ ⑫ ⑬ ⑭ ⑮ ⑯ ⑰ ⑱ ⑲ ⑳
+# Inline Checkboxes — Obsidian Plugin
 
-Use for priorities, numbered steps, or ratings. No more manual numbering — the plugin manages the sequence for you!
+This plugin transforms Unicode characters into stylized, interactive pseudo-checkboxes and numbered markers within a paragraph. **Note:** These checkboxes are NOT tasks and are not recognized by Obsidian or task plugins; they are purely for visual organization.
 
-Installation
-Download the latest release (main.js, manifest.json, styles.css).
-Create a folder: .obsidian/plugins/Yule-inline-checkbox/.
-Move the files into that folder.
-Enable in Settings → Community Plugins.
+## Features
+
+- **Inline checkboxes** — works anywhere in the text, not just in lists.
+- **Click to toggle** — cyclic state changes.
+- **Two independent cycles**:
+  - Checkboxes: `▢ → ☑ → ◧ → ☒ → ⚠ → ⍰ → ▢`
+  - Digits: `① → ② → ... → ⑩ → ... → ⑳ → ①`
+- **Smart Numbering (v2.0.0):**
+  - **Context-aware insertion:** The plugin finds the nearest preceding digit in the paragraph and automatically inserts the next one in the sequence.
+  - **Auto-reindexing:** When you insert a digit in the middle of a row, all subsequent digits in that paragraph are automatically incremented to maintain the correct order.
+- **Full Customization** — change colors, sizes, and glow effects via CSS variables.
+
+## Checkbox States
+
+| Symbol | State | Description |
+|:------:|-----------|----------|
+| `▢` | Empty | Not started (orange pulsing glow) |
+| `☑` | Done | Completed (filled green square) |
+| `◧` | In Progress | In work (half-filled) |
+| `☒` | Cancelled | Cancelled/Rejected (gray) |
+| `⚠` | Important | Needs attention (red square) |
+| `⍰` | Question | Needs clarification (mustard square) |
+
+## Circled Digits
+`① ② ③ ④ ⑤ ⑥ ⑦ ⑧ ⑨ ⑩ ⑪ ⑫ ⑬ ⑭ ⑮ ⑯ ⑰ ⑱ ⑲ ⑳`
+
+Use these for priorities, numbered steps, or ratings. You no longer need to track numbering manually — the plugin handles the sequence for you when inserting a new digit.
+
+## Installation
+
+### Manual
+1. Download the latest release (`main.js`, `manifest.json`, `styles.css`).
+2. Create a folder named `.obsidian/plugins/Yule-inline-checkbox/`.
+3. Place the downloaded files into this folder.
+4. Enable the plugin in **Settings → Community Plugins**.
+
+### Via BRAT
+1. Install the [BRAT](https://github.com/TfTHacker/obsidian42-brat) plugin.
+2. In BRAT settings, click **Add Beta plugin**.
+3. Paste the repository link: `https://github.com/Yu1e/obsidian-inline-checkbox.git`
+4. Click **Add Plugin**, then enable **Inline Checkboxes** in the Community Plugins settings.
+
+## Usage
+
+### Commands (Command Palette)
+- `Insert or toggle checkbox` — insert or switch a checkbox.
+- `Insert or toggle circled digit` — insert the next sequential digit or toggle an existing one.
+
+### Mouse Click
+Click any checkbox or digit in the text to toggle its state. When switching digits, subsequent digits in the line will be automatically re-indexed.
+
+## Customization
+To change colors and sizes, edit the variables at the beginning of the `styles.css` file:
+
+```css
+:root {
+  /* Checkbox Colors */
+  --cb-empty:      #FF8C00;
+  --cb-done:       #556b2f;
+  --cb-progress:   #FFA500;
+  --cb-cancelled:  #808080;
+  --cb-important:  #CC0000;
+  --cb-question:   #DFA000;
+
+  /* Circled Digits */
+  --cb-digit-color: #e040fb;
+  --cb-digit2-color: #d4b0e0; /* For 10-20 */
+}
+```
+
+### Integration with Note Toolbar
+The JavaScript codes for inserting/toggling checkboxes and smart digits are provided separately: 
+- [Checkbox button script](https://github.com/Yu1e/obsidian-yule-inline-checkbox/blob/7da7281e1785e958c9cc8f1dc5a82f4074a5d581/checkboxes-button-for-note-toolbar-plugin)
+- [Smart digit button script](https://github.com/Yu1e/obsidian-yule-inline-checkbox/blob/7da7281e1785e958c9cc8f1dc5a82f4074a5d581/digits-button-for-note-toolbar-plugin)
+
+## License
+MIT
+
+## Support
+This plugin was created entirely by Claude (AI) upon request and under the guidance of the user.
+
+### Contributing
+This plugin will not be submitted to the official Obsidian plugin directory. If you find it useful, please feel free to fork it and publish your own version.
+
+The author does not plan to actively develop this plugin. You are free to:
+- Adapt the code to your needs.
+- Create your own versions with additional features.
+- Share improvements with the community.
 
 ---
 
