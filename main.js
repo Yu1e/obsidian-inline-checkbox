@@ -2,7 +2,7 @@ const { Plugin } = require('obsidian');
 const { ViewPlugin, Decoration, WidgetType } = require('@codemirror/view');
 
 /* ═══════════════════════════════════════════════
-   КАРТА ИКОНОК
+   КАРТА ИКОНОК (Unicode escape для надёжности)
    ═══════════════════════════════════════════════ */
 
 const ICON_MAP = {
@@ -12,27 +12,46 @@ const ICON_MAP = {
   "☒": "cancelled",
   "⚠": "important",
   "⍰": "question",
-  "①": "digit",
-  "②": "digit",
-  "③": "digit",
-  "④": "digit",
-  "⑤": "digit",
-  "⑥": "digit",
-  "⑦": "digit",
-  "⑧": "digit",
-  "⑨": "digit"
+  "\u2460": "digit",   // ①
+  "\u2461": "digit",   // ②
+  "\u2462": "digit",   // ③
+  "\u2463": "digit",   // ④
+  "\u2464": "digit",   // ⑤
+  "\u2465": "digit",   // ⑥
+  "\u2466": "digit",   // ⑦
+  "\u2467": "digit",   // ⑧
+  "\u2468": "digit",   // ⑨
+  "\u2789": "digit2",  // ➉
+  "\u246A": "digit2",  // ⑪
+  "\u246B": "digit2",  // ⑫
+  "\u246C": "digit2",  // ⑬
+  "\u246D": "digit2",  // ⑭
+  "\u246E": "digit2",  // ⑮
+  "\u246F": "digit2",  // ⑯
+  "\u2470": "digit2",  // ⑰
+  "\u2471": "digit2",  // ⑱
+  "\u2472": "digit2",  // ⑲
+  "\u2473": "digit2"   // ⑳
 };
 
 /* Два независимых цикла */
 const CHECKBOX_CYCLE = ["▢", "☑", "◧", "☒", "⚠", "⍰"];
-const DIGIT_CYCLE    = ["①", "②", "③", "④", "⑤", "⑥", "⑦", "⑧", "⑨"];
+const DIGIT_CYCLE = [
+  "\u2460", "\u2461", "\u2462", "\u2463", "\u2464",  // ①②③④⑤
+  "\u2465", "\u2466", "\u2467", "\u2468", "\u2789",  // ⑥⑦⑧⑨➉
+  "\u246A", "\u246B", "\u246C", "\u246D", "\u246E",  // ⑪⑫⑬⑭⑮
+  "\u246F", "\u2470", "\u2471", "\u2472", "\u2473"   // ⑯⑰⑱⑲⑳
+];
 
 function getNextIcon(icon) {
   let idx = CHECKBOX_CYCLE.indexOf(icon);
   if (idx !== -1) return CHECKBOX_CYCLE[(idx + 1) % CHECKBOX_CYCLE.length];
 
-  idx = DIGIT_CYCLE.indexOf(icon);
-  if (idx !== -1) return DIGIT_CYCLE[(idx + 1) % DIGIT_CYCLE.length];
+  for (let i = 0; i < DIGIT_CYCLE.length; i++) {
+    if (DIGIT_CYCLE[i] === icon) {
+      return DIGIT_CYCLE[(i + 1) % DIGIT_CYCLE.length];
+    }
+  }
 
   return icon;
 }
@@ -101,21 +120,31 @@ class IconWidget extends WidgetType {
 function buildDecorations(view) {
   const decs = [];
   const doc = view.state.doc;
-  const regex = /[▢☑◧☒⚠⍰①-⑨][\uFE0E\uFE0F]?/g;
+  const allIcons = Object.keys(ICON_MAP);
 
   for (let i = 1; i <= doc.lines; i++) {
     const line = doc.line(i);
-    let m;
-    while ((m = regex.exec(line.text)) !== null) {
-      const base = m[0][0];
-      const cls = ICON_MAP[base];
-      if (!cls) continue;
-      const from = line.from + m.index;
-      decs.push(
-        Decoration.replace({
-          widget: new IconWidget(base, cls, from, m[0].length),
-        }).range(from, from + m[0].length)
-      );
+    const text = line.text;
+
+    for (let ch = 0; ch < text.length; ch++) {
+      for (const icon of allIcons) {
+        if (text.substring(ch, ch + icon.length) === icon) {
+          const cls = ICON_MAP[icon];
+          const from = line.from + ch;
+          let len = icon.length;
+          while (ch + len < text.length &&
+            (text.charCodeAt(ch + len) === 0xFE0E || text.charCodeAt(ch + len) === 0xFE0F)) {
+            len++;
+          }
+          decs.push(
+            Decoration.replace({
+              widget: new IconWidget(icon, cls, from, len),
+            }).range(from, from + len)
+          );
+          ch += len - 1;
+          break;
+        }
+      }
     }
   }
   return Decoration.set(decs);
@@ -156,13 +185,102 @@ function toggleOrInsert(editor, icons) {
     const next = icons[(foundIdx + 1) % icons.length];
     let end = pos + found.length;
     while (end < line.length && (line.charCodeAt(end) === 0xFE0E || line.charCodeAt(end) === 0xFE0F)) end++;
-    editor.replaceRange(next, {line: c.line, ch: pos}, {line: c.line, ch: end});
-    editor.setCursor({line: c.line, ch: pos});
+    editor.replaceRange(next, { line: c.line, ch: pos }, { line: c.line, ch: end });
+    editor.setCursor({ line: c.line, ch: pos + next.length });
   } else {
     let ws = c.ch;
     while (ws > 0 && !" \t,".includes(line[ws - 1])) ws--;
-    editor.replaceRange(icons[0] + " ", {line: c.line, ch: ws});
-    editor.setCursor({line: c.line, ch: ws});
+    editor.replaceRange(icons[0] + " ", { line: c.line, ch: ws });
+    editor.setCursor({ line: c.line, ch: ws + icons[0].length + 1 });
+  }
+}
+
+function findAllDigits(text) {
+  const result = [];
+  for (let ch = 0; ch < text.length; ch++) {
+    for (const icon of DIGIT_CYCLE) {
+      if (text.substring(ch, ch + icon.length) === icon) {
+        result.push({ pos: ch, icon, idx: DIGIT_CYCLE.indexOf(icon), len: icon.length });
+        ch += icon.length - 1;
+        break;
+      }
+    }
+  }
+  return result;
+}
+
+function recalcRight(editor, lineNum, digits, startPos, startIdx) {
+  let offset = 0;
+  for (const digit of digits) {
+    if (digit.pos < startPos) continue;
+    const newPos = digit.pos + offset;
+    const newIcon = DIGIT_CYCLE[startIdx % DIGIT_CYCLE.length];
+    startIdx++;
+    const current = editor.getLine(lineNum).substring(newPos, newPos + digit.len);
+    if (current === digit.icon) {
+      editor.replaceRange(
+        newIcon,
+        { line: lineNum, ch: newPos },
+        { line: lineNum, ch: newPos + digit.len }
+      );
+      offset += newIcon.length - digit.len;
+    }
+  }
+}
+
+function smartInsertDigit(editor) {
+  const c = editor.getCursor();
+  const line = editor.getLine(c.line);
+  const allDigits = findAllDigits(line);
+
+  // Ищем цифру рядом с курсором
+  let nearFound = null, nearPos = -1, nearFoundIdx = -1;
+  for (let p = c.ch; p >= Math.max(0, c.ch - 5); p--) {
+    for (let i = 0; i < DIGIT_CYCLE.length; i++) {
+      if (line.substring(p, p + DIGIT_CYCLE[i].length) === DIGIT_CYCLE[i]) {
+        nearFound = DIGIT_CYCLE[i]; nearPos = p; nearFoundIdx = i;
+        break;
+      }
+    }
+    if (nearFound) break;
+  }
+
+  if (nearFound) {
+    // Переключаем и пересчитываем правее
+    const next = DIGIT_CYCLE[(nearFoundIdx + 1) % DIGIT_CYCLE.length];
+    let end = nearPos + nearFound.length;
+    while (end < line.length && (line.charCodeAt(end) === 0xFE0E || line.charCodeAt(end) === 0xFE0F)) end++;
+    editor.replaceRange(next, { line: c.line, ch: nearPos }, { line: c.line, ch: end });
+
+    const rightDigits = allDigits.filter(f => f.pos > nearPos);
+    recalcRight(editor, c.line, rightDigits, nearPos + next.length, nearFoundIdx + 2);
+    editor.setCursor({ line: c.line, ch: nearPos + next.length });
+
+  } else {
+    // Вставляем новую
+    const leftDigits = allDigits.filter(f => f.pos < c.ch);
+    const rightDigits = allDigits.filter(f => f.pos >= c.ch);
+
+    let insertIdx;
+    if (leftDigits.length === 0) {
+      insertIdx = 0;
+    } else {
+      const maxLeft = leftDigits.reduce((a, b) => a.idx > b.idx ? a : b);
+      insertIdx = maxLeft.idx + 1;
+    }
+
+    const toInsert = DIGIT_CYCLE[insertIdx % DIGIT_CYCLE.length];
+
+    let ws = c.ch;
+    while (ws > 0 && !" \t,".includes(line[ws - 1])) ws--;
+
+    editor.replaceRange(toInsert + " ", { line: c.line, ch: ws });
+
+    const insertedLen = toInsert.length + 1;
+    const shiftedRight = rightDigits.map(d => ({ ...d, pos: d.pos + insertedLen }));
+    recalcRight(editor, c.line, shiftedRight, ws + insertedLen, insertIdx + 1);
+
+    editor.setCursor({ line: c.line, ch: ws + toInsert.length + 1 });
   }
 }
 
@@ -174,7 +292,6 @@ class InlineCheckboxPlugin extends Plugin {
   async onload() {
     this.registerEditorExtension([ext]);
 
-    // Команда: Вставить/переключить флажок
     this.addCommand({
       id: 'toggle-checkbox',
       name: 'Insert or toggle checkbox',
@@ -183,12 +300,11 @@ class InlineCheckboxPlugin extends Plugin {
       }
     });
 
-    // Команда: Вставить/переключить цифру
     this.addCommand({
       id: 'toggle-digit',
       name: 'Insert or toggle circled digit',
       editorCallback: (editor) => {
-        toggleOrInsert(editor, DIGIT_CYCLE);
+        smartInsertDigit(editor);
       }
     });
   }

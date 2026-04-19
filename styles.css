@@ -17,6 +17,8 @@
   /* Цифры в кружке — НАСТРОЙКИ */
   --cb-digit-size:  0.55em;
   --cb-digit-color: #e040fb;
+--cb-digit2-color: #e88afc;
+--cb-digit2-glow:  #e88afc;
   --cb-digit-glow:  #e040fb;
 }
 
@@ -128,6 +130,15 @@
   font-size: var(--cb-digit-size) !important;
   color: var(--cb-digit-color) !important;
   text-shadow: 0 0 6px var(--cb-digit-glow);
+  vertical-align: middle;
+  position: relative;
+  top: -1px;
+}
+
+.icon-digit2 {
+  font-size: 1.06em !important;
+  color: var(--cb-digit2-color) !important;
+  text-shadow: 0 0 4px var(--cb-digit2-glow);
   vertical-align: middle;
   position: relative;
   top: -1px;
