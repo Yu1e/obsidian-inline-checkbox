@@ -96,7 +96,9 @@ Enable in Settings → Community Plugins.
 Для изменения цветов и размеров редактируйте переменные в начале файла `styles.css`:
 
 ### Использование с Note Toolbar
-Код для вставки и переключения кнопок (флажки и умные цифры) прилагается отдельно: [code-for-note-toolbar-plugin-button.js](code-for-note-toolbar-plugin-button.js)
+Коды для вставки и переключения флажков и умных цифр прилагается отдельно: 
+- [checkboxes-button-for-note-toolbar-plugin.js](checkboxes-button-for-note-toolbar-plugin.js)
+- [digits-button-for-note-toolbar-plugin.js](digits-button-for-note-toolbar-plugin.js)
 
 ## Лицензия
 MIT
